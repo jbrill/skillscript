@@ -1,6 +1,7 @@
 import pandas as pd
 import requests
-
+import csv
+import sys
 
 # Read the CSV into a pandas data frame (df)
 #   With a df you can do many things
@@ -18,26 +19,64 @@ career_pathways = df['Career Pathways (O*Net Data)']
 
 # print ("CAREER PATHWAYS\t", saved_column)
 
+master_pathways = {}
+
 for pathway in career_pathways:
+    if isinstance(pathway, float):
+        continue
+    onet_number = pathway.split(' -')[0]
+    if onet_number in master_pathways:
+        #already exists
+        continue
+    print (onet_number)
     try:
-        onet_number = pathway.split(' -')[0]
-        print (onet_number)
+        link = "http://api.dataatwork.org/v1/jobs/" + str(onet_number)
+        print (link)
+        r = requests.get(link)
+        json_val = (r.json())
+        uuid = json_val['uuid']
+        name = json_val['title']
+        desc = json_val['description']
+
         try:
-            link = "https://services.onetcenter.org/ws/online/occupations/"+str(onet_number)+"/summary/skills"
-            print (link)
-            # r = requests.get("https://services.onetcenter.org/ws/online/occupations/"+str(onet_number)+"/summary/skills")
-            # r.json()
-        except:
-            print ("REQUEST PROBLEM:\t", onet_number)
-            print ("REQUEST PROBLEM:\t", onet_number)
+            master_pathways[onet_number] = {}
+            master_pathways[onet_number]['name'] = name
+            master_pathways[onet_number]['uuid'] = uuid
+            master_pathways[onet_number]['description'] = desc
+            master_pathways[onet_number]['skills'] = []
+            link = "http://api.dataatwork.org/v1/jobs/" + str(uuid) + "/related_skills"
+            r = requests.get(link)
+            json_val = (r.json())
+            if not 'skills' in json_val:
+                continue
+            for index in range(0,5):
+                print (json_val['skills'][index]['skill_name'])
 
-    except:
-        print ("ERROR\t:", pathway)
 
-    # if pathway.contains('nan'):
-    #     continue
-    # else:
-    # print (pathway)
+                master_pathways[onet_number]['skills'].append(json_val['skills'][index]['skill_name'])
+            print (master_pathways)
+            # break
+
+        except requests.exceptions.RequestException as e:  # This is the correct syntax
+            print (e)
+            sys.exit(1)
+
+
+    except requests.exceptions.RequestException as e:  # This is the correct syntax
+        print (e)
+        sys.exit(1)
+
+with open('jobs copy.csv', 'w') as outcsv:
+    writer = csv.writer(outcsv)
+    writer.writerow(["Name", "Onet #", "Uuid", "Description", "Related Skills"])
+
+
+
+    for onetnum in master_pathways:
+        # print (onet/num)
+        # print (master_pathways[onetnum]['name'])
+        writer.writerow([master_pathways[onetnum]['name'], onetnum, master_pathways[onetnum]['uuid'], master_pathways[onetnum]['description'], ','.join(map(str, master_pathways[onetnum]['skills']))])
+        # sys.exit(1)
 
 
 # print ("DICTS\n", dicts)
