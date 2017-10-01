@@ -1,0 +1,100 @@
+11-2031.00	Public Relations and Fundraising Managers
+11-3011.00	Administrative Services Managers
+11-3071.02	Storage and Distribution Managers
+11-3071.03	Logistics Managers
+11-3111.00	Compensation and Benefits Managers
+11-3131.00	Training and Development Managers
+11-9051.00	Food Service Managers
+11-9081.00	Lodging Managers
+11-9161.00	Emergency Management Directors
+11-9199.04	Supply Chain Managers
+13-1141.00	Compensation, Benefits, and Job Analysis Specialists
+13-1199.03	Customs Brokers
+13-2099.01	Financial Quantitative Analysts
+13-2099.04	Fraud Examiners, Investigators and Analysts
+15-1121.00	Computer Systems Analysts
+15-1134.00	Web Developers
+15-1142.00	Network and Computer Systems Administrators
+15-1151.00	Computer User Support Specialists
+15-2011.00	Actuaries
+15-2031.00	Operations Research Analysts
+17-1022.00	Surveyors
+17-2021.00	Agricultural Engineers
+17-2031.00	Biomedical Engineers
+17-2041.00	Chemical Engineers
+17-2051.01	Transportation Engineers
+17-2161.00	Nuclear Engineers
+17-2199.04	Manufacturing Engineers
+17-3013.00	Mechanical Drafters
+17-3022.00	Civil Engineering Technicians
+17-3029.06	Manufacturing Engineering Technologists
+17-3029.09	Manufacturing Production Technicians
+17-3029.11	Nanotechnology Engineering Technologists
+17-3031.01	Surveying Technicians
+19-1022.00	Microbiologists
+19-3039.01	Neuropsychologists and Clinical Neuropsychologists
+19-3094.00	Political Scientists
+19-3099.01	Transportation Planners
+19-4021.00	Biological Technicians
+19-4051.01	Nuclear Equipment Operation Technicians
+23-2093.00	Title Examiners, Abstractors, and Searchers
+25-4021.00	Librarians
+25-4031.00	Library Technicians
+27-1013.00	Fine Artists, Including Painters, Sculptors, and Illustrators
+27-1025.00	Interior Designers
+27-2011.00	Actors
+27-2041.01	Music Directors
+27-3021.00	Broadcast News Analysts
+27-3041.00	Editors
+27-3043.05	Poets, Lyricists and Creative Writers
+29-2035.00	Magnetic Resonance Imaging Technologists
+33-1021.01	Municipal Fire Fighting and Prevention Supervisors
+33-2011.01	Municipal Firefighters
+33-2021.01	Fire Inspectors
+33-3052.00	Transit and Railroad Police
+35-1012.00	First-Line Supervisors of Food Preparation and Serving Workers
+35-2021.00	Food Preparation Workers
+35-3011.00	Bartenders
+35-3021.00	Combined Food Preparation and Serving Workers, Including Fast Food
+39-1012.00	Slot Supervisors
+39-4031.00	Morticians, Undertakers, and Funeral Directors
+39-9032.00	Recreation Workers
+43-3031.00	Bookkeeping, Accounting, and Auditing Clerks
+43-4081.00	Hotel, Motel, and Resort Desk Clerks
+43-4131.00	Loan Interviewers and Clerks
+43-4161.00	Human Resources Assistants, Except Payroll and Timekeeping
+43-6011.00	Executive Secretaries and Executive Administrative Assistants
+43-9022.00	Word Processors and Typists
+43-9071.00	Office Machine Operators, Except Computer
+45-1011.08	First-Line Supervisors of Animal Husbandry and Animal Care Workers
+45-2041.00	Graders and Sorters, Agricultural Products
+45-4022.00	Logging Equipment Operators
+45-4023.00	Log Graders and Scalers
+47-4051.00	Highway Maintenance Workers
+47-4071.00	Septic Tank Servicers and Sewer Pipe Cleaners
+47-5021.00	Earth Drillers, Except Oil and Gas
+47-5061.00	Roof Bolters, Mining
+49-2022.00	Telecommunications Equipment Installers and Repairers, Except Line Installers
+49-2092.00	Electric Motor, Power Tool, and Related Repairers
+49-2095.00	Electrical and Electronics Repairers, Powerhouse, Substation, and Relay
+49-3042.00	Mobile Heavy Equipment Mechanics, Except Engines
+49-9012.00	Control and Valve Installers and Repairers, Except Mechanical Door
+49-9091.00	Coin, Vending, and Amusement Machine Servicers and Repairers
+51-2021.00	Coil Winders, Tapers, and Finishers
+51-2023.00	Electromechanical Equipment Assemblers
+51-3022.00	Meat, Poultry, and Fish Cutters and Trimmers
+51-3023.00	Slaughterers and Meat Packers
+51-3091.00	Food and Tobacco Roasting, Baking, and Drying Machine Operators and Tenders
+51-4062.00	Patternmakers, Metal and Plastic
+51-6021.00	Pressers, Textile, Garment, and Related Materials
+51-6031.00	Sewing Machine Operators
+51-7021.00	Furniture Finishers
+51-9111.00	Packaging and Filling Machine Operators and Tenders
+51-9121.00	Coating, Painting, and Spraying Machine Setters, Operators, and Tenders
+51-9151.00	Photographic Process Workers and Processing Machine Operators
+51-9192.00	Cleaning, Washing, and Metal Pickling Equipment Operators and Tenders
+51-9193.00	Cooling and Freezing Equipment Operators and Tenders
+51-9194.00	Etchers and Engravers
+53-3011.00	Ambulance Drivers and Attendants, Except Emergency Medical Technicians
+53-7011.00	Conveyor Operators and Tenders
+53-7071.00	Gas Compressor and Gas Pumping Station Operators

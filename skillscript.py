@@ -2,33 +2,179 @@ import pandas as pd
 import requests
 import csv
 import sys
+import nltk
+from sklearn.cross_validation import train_test_split
 
-# Read the CSV into a pandas data frame (df)
-#   With a df you can do many things
-#   most important: visualize data with Seaborn
+def train(classifier, X, y):
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=33)
+
+    classifier.fit(X_train, y_train)
+    print ("Accuracy: \t", str(classifier.score(X_test, y_test)))
+    return classifier
+
+myjobs = {}
+
 df = pd.read_csv('jobs.csv', sep=',')
-print(df)
 
-# Or export it in many ways, e.g. a list of tuples
-# tuples = [tuple(x) for x in df.values]
+jobs = {}
+with open('All_Occupations.csv', 'r') as jobscsv:
+    onetreader = csv.reader(jobscsv)
 
-# or export it as a list of dicts
-# dicts = df.to_dict().values()
+    jobs = {row[0]:row[1] for row in onetreader}
 
 career_pathways = df['Career Pathways (O*Net Data)']
-
-# print ("CAREER PATHWAYS\t", saved_column)
+career_title = df['Title']
+career_category = df['Category']
+career_job_title = df['Job Title']
+career_skills = df['Skills required (if listed)']
+career_additional = df['Additional Requirements']
 
 master_pathways = {}
 
-for pathway in career_pathways:
+
+keys = list(jobs.keys())
+values = list(jobs.values())
+
+with open('Occupation Data (1).csv', 'r') as newcsv:
+    new_reader = csv.reader(newcsv)
+
+    description = {}
+
+    for row in new_reader:
+        if row[0] in description:
+            description[row[0]] += str(row[1] + " " + row[2]+ " ")
+        else:
+            description[row[0]] = str(row[1] + " " + row[2]+ " ")
+
+    new_keys = list(description.keys())
+    new_values = list(description.values())
+
+    keys.extend(new_keys)
+    values.extend(new_values)
+
+with open('Alternate Titles.csv', 'r') as altcsv:
+    alt_reader = csv.reader(altcsv)
+
+    alts = {}
+
+    for row in alt_reader:
+        if row[0] in alts:
+            alts[row[0]] += str(row[1] + " " + row[2]+ " ")
+        else:
+            alts[row[0]] = str(row[1] + " " + row[2]+ " ")
+
+    new_keys = list(alts.keys())
+    new_values = list(alts.values())
+
+    keys.extend(new_keys)
+    values.extend(new_values)
+
+with open('Sample of Reported Titles.csv', 'r') as samplcsv:
+    samp_reader = csv.reader(samplcsv)
+
+    samps = {}
+
+    for row in samp_reader:
+        if row[0] in samps:
+            samps[row[0]] += str(row[1] + " " + row[2]+ " ")
+        else:
+            samps[row[0]] = str(row[1] + " " + row[2]+ " ")
+
+    new_keys = list(samps.keys())
+    new_values = list(samps.values())
+
+    keys.extend(new_keys)
+    values.extend(new_values)
+
+with open('Tools and Technology.csv', 'r') as toolscsv:
+    tools_reader = csv.reader(toolscsv)
+
+    tools = {}
+
+    for row in tools_reader:
+        if row[0] in tools:
+            tools[row[0]] += str(row[1] + " " + row[2]+ " " + row[3] + " ")
+        else:
+            tools[row[0]] = str(row[1] + " " + row[2]+ " " + row[3] + " ")
+
+    new_keys = list(tools.keys())
+    new_values = list(tools.values())
+
+    keys.extend(new_keys)
+    values.extend(new_values)
+
+with open('Task Statements.csv', 'r') as taskscsv:
+    tasks_reader = csv.reader(taskscsv)
+
+    tasks = {}
+
+    for row in tasks_reader:
+        if row[0] in tasks:
+            tasks[row[0]] += str(row[1] + " " + row[3] + " ")
+        else:
+            tasks[row[0]] = str(row[1] + " " + row[3] + " ")
+
+    new_keys = list(tasks.keys())
+    new_values = list(tasks.values())
+
+    keys.extend(new_keys)
+    values.extend(new_values)
+
+with open('Emerging Tasks.csv', 'r') as emscsv:
+    emerge_reader = csv.reader(emscsv)
+
+    emerge = {}
+
+    for row in emerge_reader:
+        if row[0] in emerge:
+            emerge[row[0]] += str(row[1] + " " + row[2] + " " + row[5] + " ")
+        else:
+            emerge[row[0]] = str(row[1] + " " + row[2] + " " + row[5] + " ")
+
+    new_keys = list(emerge.keys())
+    new_values = list(emerge.values())
+
+    keys.extend(new_keys)
+    values.extend(new_values)
+
+with open('Tasks to DWAs.csv', 'r') as DWAscsv:
+    dwa_reader = csv.reader(DWAscsv)
+
+    dwa = {}
+
+    for row in dwa_reader:
+        if row[0] in dwa_reader:
+            dwa[row[0]] += str(row[1] + " " + row[3] + " " + row[5] + " ")
+        else:
+            dwa[row[0]] = str(row[1] + " " + row[3] + " " + row[5] + " ")
+
+    new_keys = list(dwa.keys())
+    new_values = list(dwa.values())
+
+    keys.extend(new_keys)
+    values.extend(new_values)
+
+for index in range(0, len(career_pathways)):
+    pathway = career_pathways[index]
     if isinstance(pathway, float):
         continue
     onet_number = pathway.split(' -')[0]
+
+    textset = str(career_title[index])
+    textset += " " + str(career_category[index])
+    textset += " " + str(career_job_title[index])
+    textset += " " + str(career_skills[index])
+    textset += " " + str(career_additional[index])
+
+    keys.append(onet_number)
+    values.append(textset)
+
     if onet_number in master_pathways:
         #already exists
         continue
     print (onet_number)
+    print ("PATHWAY\t", pathway)
+    # addToDict(pathway)
     try:
         link = "http://api.dataatwork.org/v1/jobs/" + str(onet_number)
         print (link)
@@ -66,6 +212,8 @@ for pathway in career_pathways:
         print (e)
         sys.exit(1)
 
+
+
 with open('jobs copy.csv', 'w') as outcsv:
     writer = csv.writer(outcsv)
     writer.writerow(["Name", "Onet #", "Uuid", "Description", "Related Skills"])
@@ -76,15 +224,51 @@ with open('jobs copy.csv', 'w') as outcsv:
         # print (onet/num)
         # print (master_pathways[onetnum]['name'])
         writer.writerow([master_pathways[onetnum]['name'], onetnum, master_pathways[onetnum]['uuid'], master_pathways[onetnum]['description'], ','.join(map(str, master_pathways[onetnum]['skills']))])
+        keys.append(onetnum)
+        values.append(str(master_pathways[onetnum]['name'] + " " +  master_pathways[onetnum]['uuid'] + " " + master_pathways[onetnum]['description']))
         # sys.exit(1)
 
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.pipeline import Pipeline
+from sklearn.feature_extraction.text import TfidfVectorizer
+import string
+from nltk.stem import PorterStemmer
+from nltk.corpus import stopwords
+from nltk import word_tokenize
 
-# print ("DICTS\n", dicts)
-# # index = 0;
-# for line in dicts:
-#     # if index > 2:
-#         # break
-#     print ("LINE\n", line)
-#     # for num in line:
-#         # print (line[num])
-    # index += 1
+
+def stemming_tokenizer(text):
+    stemmer = PorterStemmer()
+    return [stemmer.stem(w) for w in word_tokenize(text)]
+
+trial5 = Pipeline([
+    ('vectorizer', TfidfVectorizer(tokenizer=stemming_tokenizer,
+                             stop_words=stopwords.words('english') + list(string.punctuation))),
+    ('classifier', MultinomialNB(alpha=0.05)),
+])
+print (keys)
+# print (values)
+classifier = train(trial5, values, keys)
+
+print (len(values))
+
+print(type(classifier))
+
+import feedparser
+
+# entries = []
+# feed = feedparser.parse('https://detroit.craigslist.org/d/jobs/search/jjj?format=rss')
+# for entry in feed['entries']:
+#     entr = entry['summary'] + " " + entry['title']
+#     entries.append(entr)
+#     y_test = classifier.predict([entr])
+#     print(y_test)
+#     print(entry['title'] + ":\t" + y_test[0])
+
+entr = "staffing is currently in need of people! We continuously staff for the following general job descriptions:* Industrial Food Production - Load/unload food products in to bins, prepare product for shipment, pack boxes"
+y_test = classifier.predict([entr])
+print (y_test)
+#     print(y_test)
+#
+# for idx in range(0, len(entries)):
+#     print (entries[idx] + ":\t" + y_test[idx])
