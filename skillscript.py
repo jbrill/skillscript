@@ -256,14 +256,16 @@ print(type(classifier))
 
 import feedparser
 
-# entries = []
-# feed = feedparser.parse('https://detroit.craigslist.org/d/jobs/search/jjj?format=rss')
-# for entry in feed['entries']:
-#     entr = entry['summary'] + " " + entry['title']
-#     entries.append(entr)
-#     y_test = classifier.predict([entr])
-#     print(y_test)
-#     print(entry['title'] + ":\t" + y_test[0])
+entries = []
+feed = feedparser.parse('https://detroit.craigslist.org/d/jobs/search/jjj?format=rss')
+print ("LENGTH OF FEED:\t", len(feed['entries']))
+for entry in feed['entries']:
+    print ("ENTRY:\n", entry)
+    entr = entry['summary'] + " " + entry['title']
+    entries.append(entr)
+    y_test = classifier.predict([entr])
+    print(y_test)
+    print(entry['title'] + ":\t" + y_test[0])
 
 entr = "staffing is currently in need of people! We continuously staff for the following general job descriptions:* Industrial Food Production - Load/unload food products in to bins, prepare product for shipment, pack boxes"
 y_test = classifier.predict([entr])
