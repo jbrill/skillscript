@@ -154,63 +154,63 @@ with open('Tasks to DWAs.csv', 'r') as DWAscsv:
     keys.extend(new_keys)
     values.extend(new_values)
 
-for index in range(0, len(career_pathways)):
-    pathway = career_pathways[index]
-    if isinstance(pathway, float):
-        continue
-    onet_number = pathway.split(' -')[0]
-
-    textset = str(career_title[index])
-    textset += " " + str(career_category[index])
-    textset += " " + str(career_job_title[index])
-    textset += " " + str(career_skills[index])
-    textset += " " + str(career_additional[index])
-
-    keys.append(onet_number)
-    values.append(textset)
-
-    if onet_number in master_pathways:
-        #already exists
-        continue
-    print (onet_number)
-    print ("PATHWAY\t", pathway)
-    # addToDict(pathway)
-    try:
-        link = "http://api.dataatwork.org/v1/jobs/" + str(onet_number)
-        print (link)
-        r = requests.get(link)
-        json_val = (r.json())
-        uuid = json_val['uuid']
-        name = json_val['title']
-        desc = json_val['description']
-
-        try:
-            master_pathways[onet_number] = {}
-            master_pathways[onet_number]['name'] = name
-            master_pathways[onet_number]['uuid'] = uuid
-            master_pathways[onet_number]['description'] = desc
-            master_pathways[onet_number]['skills'] = []
-            link = "http://api.dataatwork.org/v1/jobs/" + str(uuid) + "/related_skills"
-            r = requests.get(link)
-            json_val = (r.json())
-            if not 'skills' in json_val:
-                continue
-            for index in range(0,5):
-                print (json_val['skills'][index]['skill_name'])
-
-
-                master_pathways[onet_number]['skills'].append(json_val['skills'][index]['skill_name'])
-            print (master_pathways)
-            # break
-
-        except requests.exceptions.RequestException as e:  # This is the correct syntax
-            print (e)
-            sys.exit(1)
-
-
-    except requests.exceptions.RequestException as e:  # This is the correct syntax
-        print (e)
-        sys.exit(1)
+# for index in range(0, len(career_pathways)):
+#     pathway = career_pathways[index]
+#     if isinstance(pathway, float):
+#         continue
+#     onet_number = pathway.split(' -')[0]
+#
+#     textset = str(career_title[index])
+#     textset += " " + str(career_category[index])
+#     textset += " " + str(career_job_title[index])
+#     textset += " " + str(career_skills[index])
+#     textset += " " + str(career_additional[index])
+#
+#     keys.append(onet_number)
+#     values.append(textset)
+#
+#     if onet_number in master_pathways:
+#         #already exists
+#         continue
+#     print (onet_number)
+#     print ("PATHWAY\t", pathway)
+#     # addToDict(pathway)
+#     try:
+#         link = "http://api.dataatwork.org/v1/jobs/" + str(onet_number)
+#         print (link)
+#         r = requests.get(link)
+#         json_val = (r.json())
+#         uuid = json_val['uuid']
+#         name = json_val['title']
+#         desc = json_val['description']
+#
+#         try:
+#             master_pathways[onet_number] = {}
+#             master_pathways[onet_number]['name'] = name
+#             master_pathways[onet_number]['uuid'] = uuid
+#             master_pathways[onet_number]['description'] = desc
+#             master_pathways[onet_number]['skills'] = []
+#             link = "http://api.dataatwork.org/v1/jobs/" + str(uuid) + "/related_skills"
+#             r = requests.get(link)
+#             json_val = (r.json())
+#             if not 'skills' in json_val:
+#                 continue
+#             for index in range(0,5):
+#                 print (json_val['skills'][index]['skill_name'])
+#
+#
+#                 master_pathways[onet_number]['skills'].append(json_val['skills'][index]['skill_name'])
+#             print (master_pathways)
+#             # break
+#
+#         except requests.exceptions.RequestException as e:  # This is the correct syntax
+#             print (e)
+#             sys.exit(1)
+#
+#
+#     except requests.exceptions.RequestException as e:  # This is the correct syntax
+#         print (e)
+#         sys.exit(1)
 
 
 
@@ -256,20 +256,63 @@ print(type(classifier))
 
 import feedparser
 
+LINK = "https://detroit.craigslist.org/d/jobs/search/jjj?format=rss"
+
 entries = []
-feed = feedparser.parse('https://detroit.craigslist.org/d/jobs/search/jjj?format=rss')
+skills = {}
+feed = feedparser.parse(LINK)
 print ("LENGTH OF FEED:\t", len(feed['entries']))
 for entry in feed['entries']:
     print ("ENTRY:\n", entry)
     entr = entry['summary'] + " " + entry['title']
     entries.append(entr)
     y_test = classifier.predict([entr])
+    link = "http://api.dataatwork.org/v1/jobs/" + str(y_test[0])
+    r = requests.get(link)
+    json_val = (r.json())
+    uuid = json_val['uuid']
+    name = json_val['title']
+    desc = json_val['description']
+    print('UUID:\t', uuid)
     print(y_test)
     print(entry['title'] + ":\t" + y_test[0])
+    link = "http://api.dataatwork.org/v1/jobs/" + str(uuid) + "/related_skills"
+    r = requests.get(link)
+    json_val = (r.json())
 
-entr = "staffing is currently in need of people! We continuously staff for the following general job descriptions:* Industrial Food Production - Load/unload food products in to bins, prepare product for shipment, pack boxes"
-y_test = classifier.predict([entr])
-print (y_test)
+    new_entry = {}
+    new_entry['classification'] = y_test[0]
+    new_entry['title'] = entry['title']
+
+
+    if not 'skills' in json_val:
+        # no skills!
+        continue
+    for new_skill in json_val['skills']:
+        #iterate through skills of a gig
+        if float(new_skill['importance']) > 3.0:
+            new_entry['weight'] = new_skill['importance']
+            if new_skill['normalized_skill_name'] in skills:
+                flag = False
+                for entry_title in skills[new_skill['normalized_skill_name']]:
+                    if entry_title['title'] == new_entry['title']:
+                        flag = True
+                if flag == True:
+                    print("DUPLICATE\n")
+                else:
+                    skills[new_skill['normalized_skill_name']].append(new_entry)
+                    # break
+            else:
+                skills[new_skill['normalized_skill_name']] = [new_entry]
+            # append our new entry
+
+for skill in skills:
+    print (skill, "\n")
+    for gig in skills[skill]:
+        print (gig['title'] + ": \t" + str(gig['weight']))
+    print ("\n\n")
+
+
 #     print(y_test)
 #
 # for idx in range(0, len(entries)):
