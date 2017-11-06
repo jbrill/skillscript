@@ -260,9 +260,11 @@ LINK = "https://detroit.craigslist.org/d/jobs/search/jjj?format=rss"
 
 entries = []
 skills = {}
+entries_num = 0
 feed = feedparser.parse(LINK)
 print ("LENGTH OF FEED:\t", len(feed['entries']))
 for entry in feed['entries']:
+    entries_num += 1
     print ("ENTRY:\n", entry)
     entr = entry['summary'] + " " + entry['title']
     entries.append(entr)
@@ -306,14 +308,16 @@ for entry in feed['entries']:
                 skills[new_skill['normalized_skill_name']] = [new_entry]
             # append our new entry
 
+skill_len = 0
+gig_len = 0
 for skill in skills:
+    skill_len += 1
     print (skill, "\n")
     for gig in skills[skill]:
+        gig_len += 1
         print (gig['title'] + ": \t" + str(gig['weight']))
     print ("\n\n")
 
-
-#     print(y_test)
-#
-# for idx in range(0, len(entries)):
-#     print (entries[idx] + ":\t" + y_test[idx])
+print("SKILL_LEN:\t", str(skill_len))
+print("GIG_LEN:\t", str(gig_len))
+print("ENTRY_LEN:\t", str(entries_num))
