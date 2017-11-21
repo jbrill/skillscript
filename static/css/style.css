@@ -1,0 +1,18 @@
+body {
+  background-color: white;
+  font: helvetica;
+}
+/*
+label * {
+  padding: 20px;
+
+}*/
+
+.centered {
+  width: 50%;
+  margin-top: 20%;
+  margin-left: 20%;
+  background-color: steelblue;
+  text-align: center;
+  padding: 20px;
+}

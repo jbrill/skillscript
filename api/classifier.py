@@ -1,9 +1,12 @@
+from flask import *
 import pandas as pd
 import requests
 import csv
 import sys
 import nltk
 from sklearn.cross_validation import train_test_split
+
+classifier = Blueprint('classifier', __name__, template_folder='templates')
 
 def train(classifier, X, y):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=33)
@@ -14,10 +17,10 @@ def train(classifier, X, y):
 
 myjobs = {}
 
-df = pd.read_csv('jobs.csv', sep=',')
+df = pd.read_csv('sheets/jobs.csv', sep=',')
 
 jobs = {}
-with open('All_Occupations.csv', 'r') as jobscsv:
+with open('sheets/All_Occupations.csv', 'r') as jobscsv:
     onetreader = csv.reader(jobscsv)
 
     jobs = {row[0]:row[1] for row in onetreader}
@@ -35,7 +38,7 @@ master_pathways = {}
 keys = list(jobs.keys())
 values = list(jobs.values())
 
-with open('Occupation Data (1).csv', 'r') as newcsv:
+with open('sheets/Occupation Data (1).csv', 'r') as newcsv:
     new_reader = csv.reader(newcsv)
 
     description = {}
@@ -52,7 +55,7 @@ with open('Occupation Data (1).csv', 'r') as newcsv:
     keys.extend(new_keys)
     values.extend(new_values)
 
-with open('Alternate Titles.csv', 'r') as altcsv:
+with open('sheets/Alternate Titles.csv', 'r') as altcsv:
     alt_reader = csv.reader(altcsv)
 
     alts = {}
@@ -69,7 +72,7 @@ with open('Alternate Titles.csv', 'r') as altcsv:
     keys.extend(new_keys)
     values.extend(new_values)
 
-with open('Sample of Reported Titles.csv', 'r') as samplcsv:
+with open('sheets/Sample of Reported Titles.csv', 'r') as samplcsv:
     samp_reader = csv.reader(samplcsv)
 
     samps = {}
@@ -86,7 +89,7 @@ with open('Sample of Reported Titles.csv', 'r') as samplcsv:
     keys.extend(new_keys)
     values.extend(new_values)
 
-with open('Tools and Technology.csv', 'r') as toolscsv:
+with open('sheets/Tools and Technology.csv', 'r') as toolscsv:
     tools_reader = csv.reader(toolscsv)
 
     tools = {}
@@ -103,7 +106,7 @@ with open('Tools and Technology.csv', 'r') as toolscsv:
     keys.extend(new_keys)
     values.extend(new_values)
 
-with open('Task Statements.csv', 'r') as taskscsv:
+with open('sheets/Task Statements.csv', 'r') as taskscsv:
     tasks_reader = csv.reader(taskscsv)
 
     tasks = {}
@@ -120,7 +123,7 @@ with open('Task Statements.csv', 'r') as taskscsv:
     keys.extend(new_keys)
     values.extend(new_values)
 
-with open('Emerging Tasks.csv', 'r') as emscsv:
+with open('sheets/Emerging Tasks.csv', 'r') as emscsv:
     emerge_reader = csv.reader(emscsv)
 
     emerge = {}
@@ -137,7 +140,7 @@ with open('Emerging Tasks.csv', 'r') as emscsv:
     keys.extend(new_keys)
     values.extend(new_values)
 
-with open('Tasks to DWAs.csv', 'r') as DWAscsv:
+with open('sheets/Tasks to DWAs.csv', 'r') as DWAscsv:
     dwa_reader = csv.reader(DWAscsv)
 
     dwa = {}
@@ -214,11 +217,9 @@ with open('Tasks to DWAs.csv', 'r') as DWAscsv:
 
 
 
-with open('jobs copy.csv', 'w') as outcsv:
+with open('sheets/jobs copy.csv', 'w') as outcsv:
     writer = csv.writer(outcsv)
     writer.writerow(["Name", "Onet #", "Uuid", "Description", "Related Skills"])
-
-
 
     for onetnum in master_pathways:
         # print (onet/num)
@@ -246,78 +247,8 @@ trial5 = Pipeline([
                              stop_words=stopwords.words('english') + list(string.punctuation))),
     ('classifier', MultinomialNB(alpha=0.05)),
 ])
-print (keys)
+# print (keys)
 # print (values)
 classifier = train(trial5, values, keys)
 
-print (len(values))
-
-print(type(classifier))
-
-import feedparser
-
-LINK = "https://detroit.craigslist.org/d/jobs/search/jjj?format=rss"
-
-entries = []
-skills = {}
-entries_num = 0
-feed = feedparser.parse(LINK)
-print ("LENGTH OF FEED:\t", len(feed['entries']))
-for entry in feed['entries']:
-    entries_num += 1
-    print ("ENTRY:\n", entry)
-    entr = entry['summary'] + " " + entry['title']
-    entries.append(entr)
-    y_test = classifier.predict([entr])
-    link = "http://api.dataatwork.org/v1/jobs/" + str(y_test[0])
-    r = requests.get(link)
-    json_val = (r.json())
-    uuid = json_val['uuid']
-    name = json_val['title']
-    desc = json_val['description']
-    print('UUID:\t', uuid)
-    print(y_test)
-    print(entry['title'] + ":\t" + y_test[0])
-    link = "http://api.dataatwork.org/v1/jobs/" + str(uuid) + "/related_skills"
-    r = requests.get(link)
-    json_val = (r.json())
-
-    new_entry = {}
-    new_entry['classification'] = y_test[0]
-    new_entry['title'] = entry['title']
-
-
-    if not 'skills' in json_val:
-        # no skills!
-        continue
-    for new_skill in json_val['skills']:
-        #iterate through skills of a gig
-        if float(new_skill['importance']) > 3.0:
-            new_entry['weight'] = new_skill['importance']
-            if new_skill['normalized_skill_name'] in skills:
-                flag = False
-                for entry_title in skills[new_skill['normalized_skill_name']]:
-                    if entry_title['title'] == new_entry['title']:
-                        flag = True
-                if flag == True:
-                    print("DUPLICATE\n")
-                else:
-                    skills[new_skill['normalized_skill_name']].append(new_entry)
-                    # break
-            else:
-                skills[new_skill['normalized_skill_name']] = [new_entry]
-            # append our new entry
-
-skill_len = 0
-gig_len = 0
-for skill in skills:
-    skill_len += 1
-    print (skill, "\n")
-    for gig in skills[skill]:
-        gig_len += 1
-        print (gig['title'] + ": \t" + str(gig['weight']))
-    print ("\n\n")
-
-print("SKILL_LEN:\t", str(skill_len))
-print("GIG_LEN:\t", str(gig_len))
-print("ENTRY_LEN:\t", str(entries_num))
+# print (len(values))
