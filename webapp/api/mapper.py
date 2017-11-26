@@ -8,7 +8,10 @@ def findCurrSkills(pastJobs):
 		r = requests.get(link)
 		json_val = (r.json())
 		# print(json_val)
-		uuid = json_val['uuid']
+		if 'uuid' in json_val:
+			uuid = json_val['uuid']
+		else:
+			continue
 		# name = json_val['title']
 		# desc = json_val['description']
 		# print('UUID:\t', uuid)
@@ -54,7 +57,7 @@ def findRequiredSkills(targetJob):
 	link = "http://api.dataatwork.org/v1/jobs/" + str(targetJob)
 	r = requests.get(link)
 	json_val = (r.json())
-	if json_val['uuid']:
+	if 'uuid' in json_val:
 		uuid = json_val['uuid']
 	else:
 		return []
@@ -77,7 +80,7 @@ def findGigSkills(gigList):
 		link = "http://api.dataatwork.org/v1/jobs/" + str(gig.o_net_cat)
 		r = requests.get(link)
 		json_val = (r.json())
-		if json_val['uuid']:
+		if 'uuid' in json_val:
 			uuid = json_val['uuid']
 		else:
 			continue
@@ -89,7 +92,7 @@ def findGigSkills(gigList):
 		if 'skills' in json_val:
 			for skill in json_val['skills']:
 				# print("SKILL:\t", skill)
-				if skill['importance'] > 3:
+				if skill['importance'] > 4:
 					skills.append(skill['skill_name'])
 
 		gig.addSkills(skills)

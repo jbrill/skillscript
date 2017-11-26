@@ -5,9 +5,10 @@ class Gig:
     o_net_cat = ""
     skills = []
 
-    def __init__(self, titleIn, descIn):
+    def __init__(self, titleIn, descIn, urlIn):
         self.title = titleIn
         self.Redescription = descIn
+        self.url = urlIn
 
     def getAllText(self):
         return self.title + self.description

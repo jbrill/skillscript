@@ -1,0 +1,117 @@
+body {
+  background-color: #F5F5F5;
+  font: helvetica;
+}
+
+main {
+}
+/*
+label * {
+  padding: 20px;
+
+}*/
+
+.mdl-layout .mdl-layout__drawer-button {
+  display: none;
+}
+
+
+.demo-card-wide.mdl-card {
+  width: 640px;
+  height: 300px;
+
+}
+
+.mdl-card__actions {
+
+  outline: skyblue solid 5px;
+  z-index: 4;
+
+
+}
+#name {
+  display:flex;
+  margin-top: 10px;
+  justify-content: left;
+}
+
+#contact{
+  diplay: flex;
+
+}
+
+.demo-list-item {
+  width: 300px;
+}
+
+.mdl-button {
+// outline: blue solid 5px;
+  position: absolute;
+  right: 20px;
+  bottom: 100px;
+  float: right;
+}
+.demo-card-wide {
+  height: 200px;
+ // outline: limegreen 10px solid;
+}
+
+
+.demo-card-wide > .mdl-card__title {
+  color: #fff;
+  height: 64px;
+  background-color:indigo;
+}
+
+.mdl-card__title-text {
+  position: relative;
+  top: 6px;
+
+}
+
+.demo-card-wide > .mdl-card__menu {
+  color: #fff;
+}
+
+#loader {
+  text-align: center;
+  margin-top: 20%;
+}
+
+#gigtitle {
+  color: purple;
+}
+
+#giglist {
+  position: absolute;
+  left: 0px;
+  margin-left: 15%;
+}
+
+.mdl-spinner {
+  display: inline-block; float: none;
+}
+
+#gigcard {
+  width:100%;
+  display:flex;
+  flex-direction: row;
+  // outline: red solid 10px;
+  justify-content: center;
+  align-items: center;
+}
+
+#mycard {
+  height: 600px;
+  width:100%;
+ display:flex;
+  flex-direction: row;
+  // outline: red solid 10px;
+  justify-content: center;
+  align-items: center;
+}
+
+.mdl-textfield {
+  width: 250px;
+  margin-right: 10px;
+}

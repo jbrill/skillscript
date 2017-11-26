@@ -6,7 +6,7 @@ import sys
 import nltk
 from sklearn.cross_validation import train_test_split
 
-classifier = Blueprint('classifier', __name__, template_folder='templates')
+classifier = Blueprint('classifier', __name__)
 
 def train(classifier, X, y):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=33)
@@ -157,65 +157,6 @@ with open('sheets/Tasks to DWAs.csv', 'r') as DWAscsv:
     keys.extend(new_keys)
     values.extend(new_values)
 
-# for index in range(0, len(career_pathways)):
-#     pathway = career_pathways[index]
-#     if isinstance(pathway, float):
-#         continue
-#     onet_number = pathway.split(' -')[0]
-#
-#     textset = str(career_title[index])
-#     textset += " " + str(career_category[index])
-#     textset += " " + str(career_job_title[index])
-#     textset += " " + str(career_skills[index])
-#     textset += " " + str(career_additional[index])
-#
-#     keys.append(onet_number)
-#     values.append(textset)
-#
-#     if onet_number in master_pathways:
-#         #already exists
-#         continue
-#     print (onet_number)
-#     print ("PATHWAY\t", pathway)
-#     # addToDict(pathway)
-#     try:
-#         link = "http://api.dataatwork.org/v1/jobs/" + str(onet_number)
-#         print (link)
-#         r = requests.get(link)
-#         json_val = (r.json())
-#         uuid = json_val['uuid']
-#         name = json_val['title']
-#         desc = json_val['description']
-#
-#         try:
-#             master_pathways[onet_number] = {}
-#             master_pathways[onet_number]['name'] = name
-#             master_pathways[onet_number]['uuid'] = uuid
-#             master_pathways[onet_number]['description'] = desc
-#             master_pathways[onet_number]['skills'] = []
-#             link = "http://api.dataatwork.org/v1/jobs/" + str(uuid) + "/related_skills"
-#             r = requests.get(link)
-#             json_val = (r.json())
-#             if not 'skills' in json_val:
-#                 continue
-#             for index in range(0,5):
-#                 print (json_val['skills'][index]['skill_name'])
-#
-#
-#                 master_pathways[onet_number]['skills'].append(json_val['skills'][index]['skill_name'])
-#             print (master_pathways)
-#             # break
-#
-#         except requests.exceptions.RequestException as e:  # This is the correct syntax
-#             print (e)
-#             sys.exit(1)
-#
-#
-#     except requests.exceptions.RequestException as e:  # This is the correct syntax
-#         print (e)
-#         sys.exit(1)
-
-
 
 with open('sheets/jobs copy.csv', 'w') as outcsv:
     writer = csv.writer(outcsv)
@@ -237,6 +178,7 @@ from nltk.stem import PorterStemmer
 from nltk.corpus import stopwords
 from nltk import word_tokenize
 
+print("WORKING ON IT")
 
 def stemming_tokenizer(text):
     stemmer = PorterStemmer()
@@ -247,8 +189,7 @@ trial5 = Pipeline([
                              stop_words=stopwords.words('english') + list(string.punctuation))),
     ('classifier', MultinomialNB(alpha=0.05)),
 ])
-# print (keys)
-# print (values)
+
 classifier = train(trial5, values, keys)
 
-# print (len(values))
+print("CLASSIFIER READY")
